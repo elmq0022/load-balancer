@@ -1,0 +1,16 @@
+FROM golang:1.24-alpine AS build
+
+WORKDIR /app
+
+COPY go.mod ./
+COPY cmd/backend/main.go cmd/backend/main.go
+
+RUN go build -o /backend ./cmd/backend
+
+FROM alpine:3.21
+
+COPY --from=build /backend /backend
+
+EXPOSE 9090
+
+CMD ["/backend"]

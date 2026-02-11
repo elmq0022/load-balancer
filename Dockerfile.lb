@@ -1,0 +1,16 @@
+FROM golang:1.24-alpine AS build
+
+WORKDIR /app
+
+COPY go.mod ./
+COPY cmd/lb/main.go cmd/lb/main.go
+
+RUN go build -o /lb ./cmd/lb
+
+FROM alpine:3.21
+
+COPY --from=build /lb /lb
+
+EXPOSE 8080
+
+CMD ["/lb"]

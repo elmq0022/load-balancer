@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "9090:9090"
+
+  lb:
+    build:
+      context: .
+      dockerfile: Dockerfile.lb
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
