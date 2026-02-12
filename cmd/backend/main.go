@@ -9,6 +9,7 @@ import (
 )
 
 var isHealthy bool = true
+var port string = os.Getenv("PORT")
 
 func main() {
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
@@ -42,6 +43,6 @@ func main() {
 		slog.Info("health toggled", "healthy", isHealthy)
 	})
 
-	slog.Info("server starting", "port", 9090)
-	log.Fatal(http.ListenAndServe(":9090", mux))
+	slog.Info("server starting", "port", port)
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
