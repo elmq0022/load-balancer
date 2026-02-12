@@ -5,19 +5,30 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"sync"
 )
 
 var targetUrls []*url.URL = []*url.URL{
-	&url.URL{
+	{
+		Scheme: "http",
+		Host:   "backend:9090",
+	},
+	{
 		Scheme: "http",
 		Host:   "backend:9090",
 	},
 }
 
+var server int = 0
+var mu sync.Mutex
+
 func main() {
 	proxy := &httputil.ReverseProxy{
 		Rewrite: func(r *httputil.ProxyRequest) {
-			r.SetURL(targetUrls[0])
+			mu.Lock()
+			r.SetURL(targetUrls[server])
+			server = (server + 1) % len(targetUrls)
+			mu.Unlock()
 		},
 	}
 
