@@ -5,11 +5,14 @@ import (
 	"log"
 	"log/slog"
 	"net/http"
+	"os"
 )
 
 var isHealthy bool = true
 
 func main() {
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("request received", "method", r.Method, "path", r.URL.Path)
@@ -25,13 +28,13 @@ func main() {
 			data = []byte("failed to marshall data")
 		}
 
+		statusCode := http.StatusInternalServerError
 		if isHealthy && err == nil {
-			w.WriteHeader(http.StatusOK)
-		} else {
-			w.WriteHeader(http.StatusInternalServerError)
+			statusCode = http.StatusOK
 		}
+		w.WriteHeader(statusCode)
 
-		slog.Info("health check", "healthy", isHealthy, "status", w)
+		slog.Info("health check", "healthy", isHealthy, "status", statusCode)
 		w.Write(data)
 	})
 	mux.HandleFunc("GET /api/toggle-health/", func(w http.ResponseWriter, r *http.Request) {
