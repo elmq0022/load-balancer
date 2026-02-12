@@ -17,7 +17,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("request received", "method", r.Method, "path", r.URL.Path)
-		w.Write([]byte("hello from backend"))
+		w.Write([]byte("hello from backend on port: " + port))
 	})
 	mux.HandleFunc("GET /api/healthz/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -40,7 +40,7 @@ func main() {
 	})
 	mux.HandleFunc("GET /api/toggle-health/", func(w http.ResponseWriter, r *http.Request) {
 		isHealthy = !isHealthy
-		slog.Info("health toggled", "healthy", isHealthy)
+		slog.Info("health toggled for backend port: "+port, "healthy", isHealthy)
 	})
 
 	slog.Info("server starting", "port", port)

@@ -11,11 +11,15 @@ import (
 var targetUrls []*url.URL = []*url.URL{
 	{
 		Scheme: "http",
-		Host:   "backend:9090",
+		Host:   "backend6:6060",
 	},
 	{
 		Scheme: "http",
-		Host:   "backend:9090",
+		Host:   "backend7:7070",
+	},
+	{
+		Scheme: "http",
+		Host:   "backend8:8080",
 	},
 }
 
@@ -32,7 +36,7 @@ func main() {
 		},
 	}
 
-	err := http.ListenAndServe(":8080", proxy)
+	err := http.ListenAndServe(":9090", proxy)
 	if err != nil {
 		log.Fatal("failed to start server")
 	}

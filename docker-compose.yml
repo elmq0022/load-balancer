@@ -1,18 +1,38 @@
 services:
-  backend:
+  backend6:
     environment:
-      - PORT=9090
+      - PORT=6060
     build:
       context: .
       dockerfile: Dockerfile.backend
     ports:
-      - "9090:9090"
+      - "6060:6060"
+
+  backend7:
+    environment:
+      - PORT=7070
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "7070:7070"
+
+  backend8:
+    environment:
+      - PORT=8080
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8080:8080"
 
   lb:
     build:
       context: .
       dockerfile: Dockerfile.lb
     ports:
-      - "8080:8080"
+      - "9090:9090"
     depends_on:
-      - backend
+      - backend6
+      - backend7
+      - backend8
