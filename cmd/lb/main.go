@@ -36,7 +36,17 @@ func main() {
 		},
 	}
 
-	err := http.ListenAndServe(":9090", proxy)
+	err := http.ListenAndServe(":9090", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		//TODO: maybe use atomic instead?
+		mu.Lock()
+		if len(targetUrls) == 0 {
+			mu.Unlock()
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		mu.Unlock()
+		proxy.ServeHTTP(w, r)
+	}))
 	if err != nil {
 		log.Fatal("failed to start server")
 	}
