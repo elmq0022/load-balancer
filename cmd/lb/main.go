@@ -7,15 +7,17 @@ import (
 	"net/url"
 )
 
-var targetUrl *url.URL = &url.URL{
-	Scheme: "http",
-	Host:   "backend:9090",
+var targetUrls []*url.URL = []*url.URL{
+	&url.URL{
+		Scheme: "http",
+		Host:   "backend:9090",
+	},
 }
 
 func main() {
 	proxy := &httputil.ReverseProxy{
 		Rewrite: func(r *httputil.ProxyRequest) {
-			r.SetURL(targetUrl)
+			r.SetURL(targetUrls[0])
 		},
 	}
 
